@@ -1,0 +1,152 @@
+
+function emailAlert() {
+  // today's date information
+  var today = new Date();
+  var todayMonth = today.getMonth() + 1;
+  var todayDay = today.getDate();
+  var todayYear = today.getFullYear();
+
+  // 1 Week from now
+  var OneWeekFromToday = new Date();
+  OneWeekFromToday.setDate(OneWeekFromToday.getDate() + 7);
+  var OneWeekMonth = OneWeekFromToday.getMonth() + 1;
+  var OneWeekDay = OneWeekFromToday.getDate();
+  var OneWeekYear = OneWeekFromToday.getFullYear();
+  
+  // 3 Days from now
+  var ThreeDaysFromToday = new Date();
+  ThreeDaysFromToday.setDate(ThreeDaysFromToday.getDate() + 3);
+  var ThreeDaysMonth = ThreeDaysFromToday.getMonth() + 1;
+  var ThreeDaysDay = ThreeDaysFromToday.getDate();
+  var ThreeDaysYear = ThreeDaysFromToday.getFullYear();
+  
+ 
+  // getting data from spreadsheet
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var startRow = 2; // First row of data to process
+  var numRows = 100; // Number of rows to process
+
+  var dataRange = sheet.getRange(startRow, 1, numRows, 999);
+  var data = dataRange.getValues();
+
+  //looping through all of the rows
+  for (var i = 0; i < data.length; ++i) {
+    var row = data[i];
+
+    var expireDateFormat = Utilities.formatDate(
+      new Date(row[28]), 'Session.getScriptTimeZone()', 'dd-MM-yyyy'
+      
+    );
+
+    // email information
+    var subject = '';
+    var message =
+      'The Below mentioned Associate has Resigned. Please verify the Employee details for Asset and remove all the access.'+
+      '\n\n' +
+      'Employee UID: '+
+      row[2]+
+      '\n'+
+      'Employee Full Name:'+
+      row[7]+
+      '\n'+
+      'Phone Number:'+
+      row[26]+
+      '\n'+
+      'Email Address:'+
+      row[29]+
+      '\n'+
+      'LWD:'+
+      row[28];
+
+    //expiration date information
+    var expireDateMonth = new Date(row[28]).getMonth() + 1;
+    var expireDateDay = new Date(row[28]).getDate();
+    var expireDateYear = new Date(row[28]).getFullYear();
+
+    //checking for today
+    if (
+      expireDateMonth === todayMonth &&
+      expireDateDay === todayDay &&
+      expireDateYear === todayYear
+    ) {
+      var subject =
+      'Associate off-boarding:' + row[28] + ' - ' + row[2];
+      var message3 =
+      'Associate LWD is Today!!!'+ '\n'+
+      'The Below mentioned Associate has Resigned. Please verify the Employee details for Asset and remove all the access.'+ '\n\n'+
+      'Employee UID:'+row[2]+'\n'+
+      'Employee Full Name:'+row[7]+'\n'+
+      'Phone Number:'+row[26]+'\n'+
+      'Email Address:'+row[29]+'\n'+
+      'LWD:'+row[28];
+      MailApp.sendEmail('vijay.kks@udaan.com' ,subject, message3);
+      Logger.log('todayyyy!');
+    }
+
+    //checking for 1 weeks from now
+
+    Logger.log('1 weeks month, expire month' + OneWeekMonth + expireDateMonth);
+    if (
+      expireDateMonth === OneWeekMonth &&
+      expireDateDay === OneWeekDay &&
+      expireDateYear === OneWeekYear
+    ) {
+      var subject =
+        'Associate off-boarding: ' + row[28]+ ' - ' + row[2];
+      var message2 =
+      'Associate LWD is in 1 Week!!!' +
+      '\n\n' +
+      'The Below mentioned Associate has Resigned. Please verify the Employee details for Asset and remove all the access. ' +
+      '\n\n' +
+      ' Employee UID: ' +
+      row[2] +
+      '\n' +
+      ' Employee Full Name: ' +
+      row[7] +
+      '\n' +
+      ' Phone Number: ' +
+      row[26] +
+      '\n' +
+      ' Email Address: ' +
+      row[29] +
+      '\n' +
+      ' LWD: ' +
+      row[28];
+      MailApp.sendEmail('vijay.kks@udaan.com' , subject, message2);
+      Logger.log('1 week from now');
+    }
+
+    //checking for 3 Days from now
+    if (
+      expireDateMonth === ThreeDaysMonth &&
+      expireDateDay === ThreeDaysDay &&
+      expireDateYear === ThreeDaysYear
+    ) {
+      var subject =
+        'Associate off-boarding: ' + row[28]+ ' - ' + row[2];
+      var message1 =
+      'Associate LWD is in 3 Days!!!' +
+      '\n\n' +
+      'The Below mentioned Associate has Resigned. Please verify the Employee details for Asset and remove all the access. ' +
+      '\n\n' +
+      ' Employee UID: ' +
+      row[2] +
+      '\n' +
+      ' Employee Full Name: ' +
+      row[7] +
+      '\n' +
+      ' Phone Number: ' +
+      row[26] +
+      '\n' +
+      ' Email Address: ' +
+      row[29] +
+      '\n' +
+      ' LWD: ' +
+      row[28] +
+      '\n\n' +
+      'if Completed please ignore this mail';
+      MailApp.sendEmail('vijay.kks@udaan.com',subject, message1);
+      Logger.log('3 Days from now');
+    }
+  }
+}
